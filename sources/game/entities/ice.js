@@ -9,7 +9,7 @@ import {randomRange} from 'modules/random.js';
 
 function Ice(x,y) {
 
-  const entity=new Entity('ices_'+(x*32)+y, [
+  const entity=new Entity('ices_'+((y*10)+x), [
         new Camera(this.camera),
         new Position(x*32,y*32,0),
         new Images([{
@@ -20,15 +20,17 @@ function Ice(x,y) {
             'frame': 0,
             'destination': [0, 0, 0, 32, 32]
         }]),
-        new StatesSensibility([{'fire':{
+        new StatesSensibility({'fire':{
           'duration':1000+randomRange(-100,100),
           'elapsed':0,
           'modified':false,
           callback:(entity)=>{
-            this.world.add(Lake.call(this,x,y));
+            let newEntity=Lake.call(this,x,y);
+            this.world.add(newEntity);
+            this.grid[x+y*this.size.width/32]=newEntity;
             this.world.remove(entity);
           }
-        }}]),
+        }}),
         new States(['cold'])
     ]);
   return entity;

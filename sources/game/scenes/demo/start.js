@@ -7,10 +7,8 @@ import {Lava} from 'entities/lava.js';
 
 function start() {
 
-    this.world = new World(this);
-    var height=this.size.height/32;
-    var width=this.size.width/32;
     console.log('start demo scene');
+    this.world = new World(this);
     let getRandomEntity=()=>{
       let tab=[
          Lava,
@@ -20,10 +18,12 @@ function start() {
       ]
       return tab[Math.floor(Math.random() * Math.floor(tab.length))];
     }
-    for (let i = 0; i< height; i++ ){
-      for (let j = 0; j< width; j++ ){
-          console.log(i,j);
-          this.world.add(getRandomEntity().call(this,j,i));
+    this.grid=[];
+    for (let i = 0; i< this.size.height/32; i++ ){
+      for (let j = 0; j< this.size.width/32; j++ ){
+          let entity= getRandomEntity().call(this,j,i)
+          this.grid.push(entity)
+          this.world.add(entity);
       }
     }
 }

@@ -1,37 +1,34 @@
 function updateStates(entities) {
-    Object.entries(entities).forEach(([name, entity]) => {
+  Object.entries(entities).forEach(([name, entity]) => {
+    const positionComponent = entity.get('position');
+    const neighbours=getNeighbours.call(this,positionComponent);
 
-        const positionComponent = entity.get('position');
+    neighbours.forEach((neighbour)=>{
+      const statesSensibilityComponent = neighbour.get('statesSensibility');
+      if( statesSensibilityComponent ){
+
         const statesComponent = entity.get('states');
-
-        Object.entries(this.world.entities).forEach(([otherName, otherEntity]) => {
-          const otherPositionComponent = otherEntity.get('position');
-          if(positionComponent!==otherPositionComponent){
-            const statesSensibilityComponent = otherEntity.get('statesSensibility');
-            if(areNeighbours.call(this,positionComponent,otherPositionComponent,entities.length)){
-              statesSensibilityComponent.states.forEach((stateSensibility,index) => {
-                statesComponent.states.forEach((state)=>{
-                  if(state==Object.keys(stateSensibility)[0]){
-                    var stateSensibilityValues= stateSensibility[Object.keys(stateSensibility)[0]]
-                    stateSensibilityValues.modified=true;
-                  }
-                });
-              });
+        Object.entries(statesSensibilityComponent.states).forEach(([statesSensibilityName, statesSensibilityValues]) => {
+          statesComponent.states.forEach((state)=>{
+            if(state==statesSensibilityName){
+              statesSensibilityValues.modified=true;
             }
-          }
+          });
         });
+      }
 
     });
+  });
 }
 
-function areNeighbours(positionComponent,otherPositionComponent,entitiesLength){
-
-  var width=this.size.width/32;
-  var positionA=positionComponent.x/32+(positionComponent.y/32)*width;
-  var positionB=otherPositionComponent.x/32+(otherPositionComponent.y/32)*width;
-  if(Math.abs(positionA-positionB)==1 | Math.abs(positionA-positionB)==width){
-    return true;
-  }else return false;
+function getNeighbours(positionComponent){
+  let position=positionComponent.x/32+(positionComponent.y/32)*this.size.width/32;
+  var tabNeighbours = [];
+  var distanceNeighbours=[-10,-1,1,10];
+  for(var i=0,length=distanceNeighbours.length;i<length ; i++) {
+     if(this.grid[position-distanceNeighbours[i]])tabNeighbours.push(this.grid[position-distanceNeighbours[i]]);
+  }
+  return tabNeighbours;
 }
 
 export {updateStates};

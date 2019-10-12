@@ -8,7 +8,7 @@ import {States} from 'components/States.js';
 import {Lava} from 'entities/lava.js';
 
 function Rock(x,y) {
-  const entity=new Entity('rock_'+(x*32)+y, [
+  const entity=new Entity('rock_'+((y*10)+x), [
         new Camera(this.camera),
         new Position(x*32,y*32,0),
         new Images([{
@@ -19,18 +19,20 @@ function Rock(x,y) {
             'frame': 0,
             'destination': [0, 0, 0, 32, 32]
         }]),
-        new StatesSensibility([
+        new StatesSensibility(
           {
             'fire':{
             'duration':6000+randomRange(-100,100),
             'elapsed':0,
             'modified':false,
             callback:(entity)=>{
-              this.world.add(Lava.call(this,x,y));
+              let newEntity=Lava.call(this,x,y);
+              this.world.add(newEntity);
+              this.grid[x+y*this.size.width/32]=newEntity;
               this.world.remove(entity);
             }
-          }}
-        ])
+
+        }})
     ]);
     return entity;
   }
