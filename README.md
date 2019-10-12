@@ -6,7 +6,7 @@
 
 ## Overview
 
-> *Game development is in progress...*
+> https://fabiencont.github.io/chemistry-engine-prototype/
 
 ## Theatre
 
